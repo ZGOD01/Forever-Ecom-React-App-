@@ -3,8 +3,10 @@ import Title from '../components/Title';
 import { ShopContext } from '../context/ShopContext';
 
 const Orders = () => {
-    const { products, currency } = useContext(ShopContext);
-    console.log("Products in Orders:", products); 
+    const { products, cartItems, currency } = useContext(ShopContext);
+
+    // Filter products based on cartItems
+    const orderedProducts = products.filter(product => cartItems[product._id]);
 
     return (
         <div className='border-t pt-16'>
@@ -13,7 +15,7 @@ const Orders = () => {
             </div>
             <div>
                 {
-                  products.slice(1,4).map((item,index)=>(
+                  orderedProducts.map((item, index) => (
                     <div key={index} className='py-4 border-t border-b text-gray-700 flex flex-col md:flex-row md:items-center md:justify-between gap-4'>
                       <div className='flex items-start gap-6 text-sm'>
                         <img className='w-16 sm:w-20' src={item.image[0]} alt="" />
@@ -21,7 +23,7 @@ const Orders = () => {
                           <p className='sm:text-base font-medium'>{item.name}</p>
                           <div className='flex items-center gap-3 mt-2 text-base text-gray-700'>
                               <p className='text-lg'>{currency}{item.price}</p>
-                              <p>Quantity : 1</p>
+                              <p>Quantity : {Object.values(cartItems[item._id]).reduce((a, b) => a + b, 0)}</p>
                               <p>Size : M</p>
                           </div>
                           <p className='mt-2'>Date: <span className='text-gray-400'>25,Jul,2024</span>
